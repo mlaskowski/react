@@ -19,7 +19,7 @@ function Square(props) {
     );
 }
 
-function calculateWinner(squares, winner) {
+function calculateWinner(squares) {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
@@ -31,11 +31,12 @@ function calculateWinner(squares, winner) {
         [2, 4, 6],
     ];
     for(let i = 0; i<lines.length; i++){
-        console.log(i ,winner, squares[lines[i][0]], squares[lines[i][1]], squares[lines[i][2]])
-        if(squares[lines[i][0]] === winner && squares[lines[i][1]] === winner && squares[lines[i][2]] === winner){
-            return winner
+        const [a, b, c] = lines[i];
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+            return squares[a];
         }
     }
+
     return null;
 }
 
@@ -57,6 +58,9 @@ class Board extends React.Component {
 
     handleClick(i) {
         const squares = this.state.squares.slice();
+        if (calculateWinner(squares) || squares[i]) {
+            return;
+        }
         this.state.xIsNext ? squares[i] = 'X' : squares[i] = 'O' ;
         this.setState({squares: squares,
                        xIsNext: !this.state.xIsNext})
@@ -66,11 +70,18 @@ class Board extends React.Component {
     }
 
     render() {
-        const status = 'Next player:';
+        const winner = calculateWinner(this.state.squares);
+        let status;
+        if (winner) {
+            status = 'Winner: ' + winner;
+        } else {
+            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        }
+        const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 
         return (
             <div>
-            <div className="status">{status}{this.state.xIsNext ? 'X' : 'O'}</div>
+            <div className="status">{status}</div>
             <div className="board-row">
             {this.renderSquare(0)}
         {this.renderSquare(1)}
@@ -92,18 +103,21 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+
+
     render() {
+
         return (
             <div className="game">
             <div className="game-board">
             <Board />
             </div>
             <div className="game-info">
-            <div>{/* status */}</div>
+            <div>{}</div>
             <ol>{/* TODO */}</ol>
             </div>
             </div>
-    );
+        );
     }
 }
 
