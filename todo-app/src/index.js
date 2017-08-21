@@ -2,15 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// class Square extends React.Component {
-//     render() {
-//         return (
-//             <button className="square" onClick={() => this.props.onClick()}>
-//             {this.props.value}
-//             </button>
-//         );
-//     }
-// }
 function Square(props) {
     return (
         <button className="square" onClick={props.onClick}>
@@ -41,21 +32,65 @@ function calculateWinner(squares) {
 }
 
 class Board extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            squares: Array(9).fill(null),
-            xIsNext: true,
-        };
-    }
+    // constructor() {
+    //     super();
+    //     this.state = {
+    //         squares: Array(9).fill(null),
+    //         xIsNext: true,
+    //     };
+    // }
 
-    renderSquare(i) {
+    renderSquare(props, i) {
         return <Square
-            value={this.state.squares[i]}
-            onClick={() => this.handleClick(i)}
+            value={props.value[i]}
+            onClick={(i) => props.handleClick()}
         />;
     }
 
+    // handleClick(i) {
+        // const squares = this.state.squares.slice();
+        // if (calculateWinner(squares) || squares[i]) {
+        //     return;
+        // }
+        // this.state.xIsNext ? squares[i] = 'X' : squares[i] = 'O' ;
+        // this.setState({squares: squares,
+        //                xIsNext: !this.state.xIsNext})
+    // }
+
+    render(props) {
+
+        return (
+            <div>
+            <div className="board-row">
+            {this.renderSquare(props, 0)}
+        {this.renderSquare(props,1)}
+        {this.renderSquare(props,2)}
+    </div>
+        <div className="board-row">
+            {this.renderSquare(props,3)}
+        {this.renderSquare(props,4)}
+        {this.renderSquare(props,5)}
+    </div>
+        <div className="board-row">
+            {this.renderSquare(props,6)}
+        {this.renderSquare(props,7)}
+        {this.renderSquare(props,8)}
+    </div>
+        </div>
+    );
+    }
+}
+
+class Game extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            history: [{
+                squares: Array(9).fill(null),
+            }],
+            xIsNext: true,
+        };
+    }
     handleClick(i) {
         const squares = this.state.squares.slice();
         if (calculateWinner(squares) || squares[i]) {
@@ -64,11 +99,7 @@ class Board extends React.Component {
         this.state.xIsNext ? squares[i] = 'X' : squares[i] = 'O' ;
         this.setState({squares: squares,
                        xIsNext: !this.state.xIsNext})
-        if(calculateWinner(squares, this.state.xIsNext ? 'X' : 'O')){
-            window.alert(calculateWinner(squares, this.state.xIsNext ? 'X' : 'O'))
-        }
     }
-
     render() {
         const winner = calculateWinner(this.state.squares);
         let status;
@@ -77,43 +108,14 @@ class Board extends React.Component {
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
-        const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-
-        return (
-            <div>
-            <div className="status">{status}</div>
-            <div className="board-row">
-            {this.renderSquare(0)}
-        {this.renderSquare(1)}
-        {this.renderSquare(2)}
-    </div>
-        <div className="board-row">
-            {this.renderSquare(3)}
-        {this.renderSquare(4)}
-        {this.renderSquare(5)}
-    </div>
-        <div className="board-row">
-            {this.renderSquare(6)}
-        {this.renderSquare(7)}
-        {this.renderSquare(8)}
-    </div>
-        </div>
-    );
-    }
-}
-
-class Game extends React.Component {
-
-
-    render() {
 
         return (
             <div className="game">
             <div className="game-board">
-            <Board />
+            <Board onClick={() => this.state.handleClick()}/>
             </div>
             <div className="game-info">
-            <div>{}</div>
+            <div>{status}</div>
             <ol>{/* TODO */}</ol>
             </div>
             </div>
