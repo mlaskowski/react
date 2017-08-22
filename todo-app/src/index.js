@@ -40,10 +40,10 @@ class Board extends React.Component {
     //     };
     // }
 
-    renderSquare(props, i) {
+    renderSquare(props) {
         return <Square
-            value={props.value[i]}
-            onClick={(i) => props.handleClick()}
+            value={props.value}
+            onClick={() => props.handleClick()}
         />;
     }
 
@@ -57,24 +57,24 @@ class Board extends React.Component {
         //                xIsNext: !this.state.xIsNext})
     // }
 
-    render(props) {
+    render() {
 
         return (
             <div>
             <div className="board-row">
-            {this.renderSquare(props, 0)}
-        {this.renderSquare(props,1)}
-        {this.renderSquare(props,2)}
+            {this.renderSquare(this.props)}
+        {this.renderSquare(this.props)}
+        {this.renderSquare(this.props)}
     </div>
         <div className="board-row">
-            {this.renderSquare(props,3)}
-        {this.renderSquare(props,4)}
-        {this.renderSquare(props,5)}
+            {this.renderSquare(this.props)}
+        {this.renderSquare(this.props)}
+        {this.renderSquare(this.props)}
     </div>
         <div className="board-row">
-            {this.renderSquare(props,6)}
-        {this.renderSquare(props,7)}
-        {this.renderSquare(props,8)}
+            {this.renderSquare(this.props)}
+        {this.renderSquare(this.props)}
+        {this.renderSquare(this.props)}
     </div>
         </div>
     );
@@ -92,7 +92,9 @@ class Game extends React.Component {
         };
     }
     handleClick(i) {
-        const squares = this.state.squares.slice();
+        console.log(i)
+        const squares = this.state.history[0].squares.slice();
+        console.log(squares)
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
@@ -101,7 +103,7 @@ class Game extends React.Component {
                        xIsNext: !this.state.xIsNext})
     }
     render() {
-        const winner = calculateWinner(this.state.squares);
+        const winner = calculateWinner(this.state.history[0].squares);
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
@@ -112,7 +114,7 @@ class Game extends React.Component {
         return (
             <div className="game">
             <div className="game-board">
-            <Board onClick={() => this.state.handleClick()}/>
+            <Board handleClick={() => this.handleClick()} value={1}/>
             </div>
             <div className="game-info">
             <div>{status}</div>
