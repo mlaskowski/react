@@ -62,6 +62,9 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+    const history = this.state.history;
+    const current = history[history.length - 1];
+    const winner = calculateWinner(current.squares);
     constructor() {
         super();
         this.state = {
